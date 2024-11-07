@@ -1,11 +1,12 @@
 package com.financeapispring.service;
 
-import com.financeapispring.model.User;
+import com.financeapispring.dto.UserDTO;
 import java.util.Optional;
 
 public interface UserService {
-    User save(User user);
-    Optional<User> findById(Long id);
-    Optional<User> findByEmail(String email);
+    UserDTO updateUser(Long id, UserDTO userDTO);
+    UserDTO save(UserDTO userDTO);
+    Optional<UserDTO> findById(Long id);
+    Optional<UserDTO> findByEmail(String email);
     void deleteById(Long id);
 }
