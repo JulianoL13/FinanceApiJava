@@ -1,7 +1,12 @@
 package com.financeapispring.controllers;
 
 import com.financeapispring.dto.TransactionDTO;
+import com.financeapispring.dto.TransactionProjection;
+import com.financeapispring.model.Transaction;
 import com.financeapispring.service.TransactionService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +18,6 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/transactions")
 public class TransactionController {
-
     private final TransactionService transactionService;
 
     public TransactionController(TransactionService transactionService) {
@@ -21,59 +25,76 @@ public class TransactionController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TransactionDTO>> getAllTransactions() {
-        List<TransactionDTO> transactions = transactionService.findAllTransactions();
+    public ResponseEntity<List<Transaction>> getAllTransactions() {
+        List<Transaction> transactions = transactionService.findAllTransactions();
         return ResponseEntity.ok(transactions);
     }
 
     @PostMapping
-    public ResponseEntity<TransactionDTO> createTransaction(@RequestBody TransactionDTO transactionDTO) {
-        TransactionDTO createdTransaction = transactionService.save(transactionDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdTransaction);
+    public ResponseEntity<Transaction> createTransaction(@RequestBody TransactionDTO payload) {
+        try {
+            Transaction createdTransaction = transactionService.createTransaction(payload);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdTransaction);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TransactionDTO> updateTransaction(
-        @PathVariable Long id, @RequestBody TransactionDTO transactionDTO) {
-        TransactionDTO updatedTransaction = transactionService.updateTransaction(id, transactionDTO);
+    public ResponseEntity<Transaction> updateTransaction(
+        @PathVariable Long id, @RequestBody Transaction transaction) {
+        Transaction updatedTransaction = transactionService.updateTransaction(id, transaction);
         return ResponseEntity.ok(updatedTransaction);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TransactionDTO> getTransactionById(@PathVariable Long id) {
-        Optional<TransactionDTO> transaction = transactionService.findById(id);
+    public ResponseEntity<Transaction> getTransactionById(@PathVariable Long id) {
+        Optional<Transaction> transaction = transactionService.findById(id);
         return transaction.map(ResponseEntity::ok)
             .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<TransactionDTO>> getTransactionsByUserId(@PathVariable Long userId) {
-        List<TransactionDTO> transactions = transactionService.findByUserId(userId);
+    public ResponseEntity<List<Transaction>> getTransactionsByUserId(@PathVariable Long userId) {
+        List<Transaction> transactions = transactionService.findByUserId(userId);
         return ResponseEntity.ok(transactions);
     }
 
     @GetMapping("/category/{categoryId}")
-    public ResponseEntity<List<TransactionDTO>> getTransactionsByCategoryId(@PathVariable Long categoryId) {
-        List<TransactionDTO> transactions = transactionService.findByCategoryId(categoryId);
+    public ResponseEntity<List<Transaction>> getTransactionsByCategoryId(@PathVariable Long categoryId) {
+        List<Transaction> transactions = transactionService.findByCategoryId(categoryId);
         return ResponseEntity.ok(transactions);
     }
 
     @GetMapping("/date")
-    public ResponseEntity<List<TransactionDTO>> getTransactionsByDateRange(
+    public ResponseEntity<List<Transaction>> getTransactionsByDateRange(
         @RequestParam Date startDate, @RequestParam Date endDate) {
-        List<TransactionDTO> transactions = transactionService.findByDateBetween(startDate, endDate);
+        List<Transaction> transactions = transactionService.findByDateBetween(startDate, endDate);
         return ResponseEntity.ok(transactions);
     }
 
     @GetMapping("/amount/greater")
-    public ResponseEntity<List<TransactionDTO>> getTransactionsByAmountGreaterThan(@RequestParam Double amount) {
-        List<TransactionDTO> transactions = transactionService.findByAmountGreaterThan(amount);
+    public ResponseEntity<Page<TransactionProjection>> getTransactionsByAmountGreaterThanAndUserId(
+        @RequestParam Double amount,
+        @RequestParam Long userId,
+        @RequestParam int page,
+        @RequestParam int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<TransactionProjection> transactions = transactionService.findByAmountGreaterThanAndUserId(amount, userId, pageable);
         return ResponseEntity.ok(transactions);
     }
 
     @GetMapping("/amount/less")
-    public ResponseEntity<List<TransactionDTO>> getTransactionsByAmountLessThan(@RequestParam Double amount) {
-        List<TransactionDTO> transactions = transactionService.findByAmountLessThan(amount);
+    public ResponseEntity<Page<TransactionProjection>> getTransactionsByAmountLessThanAndUserId(
+        @RequestParam Double amount,
+        @RequestParam Long userId,
+        @RequestParam int page,
+        @RequestParam int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<TransactionProjection> transactions = transactionService.findByAmountLessThanAndUserId(amount, userId, pageable);
         return ResponseEntity.ok(transactions);
     }
 

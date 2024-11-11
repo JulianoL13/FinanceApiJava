@@ -1,12 +1,16 @@
 package com.financeapispring.service;
 
-import com.financeapispring.dto.UserDTO;
+import com.financeapispring.model.User;
+import com.financeapispring.model.enums.UserRole;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.Optional;
 
 public interface UserService {
-    UserDTO updateUser(Long id, UserDTO userDTO);
-    UserDTO save(UserDTO userDTO);
-    Optional<UserDTO> findById(Long id);
-    Optional<UserDTO> findByEmail(String email);
+    User updateUser(Long id, User user);
+    User save(User user);
+    User updateUserRole(Long id, UserRole role);
+    Optional<User> findById(Long id);
+    UserDetails findByEmail(String email);
     void deleteById(Long id);
 }

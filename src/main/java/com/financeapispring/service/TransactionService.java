@@ -1,20 +1,27 @@
 package com.financeapispring.service;
 
 import com.financeapispring.dto.TransactionDTO;
+import com.financeapispring.dto.TransactionProjection;
+import com.financeapispring.model.Transaction;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
 public interface TransactionService {
-    TransactionDTO updateTransaction(Long id, TransactionDTO transactionDTO);
-    TransactionDTO save(TransactionDTO transactionDTO);
-    List<TransactionDTO> findAllTransactions();
-    Optional<TransactionDTO> findById(Long id);
-    List<TransactionDTO> findByUserId(Long userId);
+    Transaction updateTransaction(Long id, Transaction transaction);
+
+    Transaction createTransaction(TransactionDTO payload);
+
+    List<Transaction> findAllTransactions();
+    Optional<Transaction> findById(Long id);
+    List<Transaction> findByUserId(Long userId);
     void deleteById(Long id);
-    List<TransactionDTO> findByCategoryId(Long categoryId);
-    List<TransactionDTO> findByDateBetween(Date startDate, Date endDate);
-    List<TransactionDTO> findByAmountGreaterThan(Double amount);
-    List<TransactionDTO> findByAmountLessThan(Double amount);
-}
+    List<Transaction> findByCategoryId(Long categoryId);
+    List<Transaction> findByDateBetween(Date startDate, Date endDate);
+    List<Transaction> findByAmountGreaterThan(Double amount);
+    List<Transaction> findByAmountLessThan(Double amount);
+    Page<TransactionProjection> findByAmountGreaterThanAndUserId(Double amount, Long userId, Pageable pageable);
+    Page<TransactionProjection> findByAmountLessThanAndUserId(Double amount, Long userId, Pageable pageable);}

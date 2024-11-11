@@ -1,9 +1,11 @@
 package com.financeapispring.controllers;
 
-import com.financeapispring.dto.UserDTO;
+import com.financeapispring.model.User;
+import com.financeapispring.model.enums.UserRole;
 import com.financeapispring.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -18,28 +20,38 @@ public class UserController {
         this.userService = userService;
     }
 
+    @PutMapping("/role")
+    public ResponseEntity<User> updateUserRole(@RequestParam Long userId, @RequestParam UserRole role) {
+        User updatedUser = userService.updateUserRole(userId, role);
+        return ResponseEntity.ok(updatedUser);
+    }
+
     @PostMapping
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
-        UserDTO createdUserDTO = userService.save(userDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUserDTO);
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+        User createdUser = userService.save(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
-        UserDTO updatedUserDTO = userService.updateUser(id, userDTO);
-        return ResponseEntity.ok(updatedUserDTO);
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
+        User updatedUser = userService.updateUser(id, user);
+        return ResponseEntity.ok(updatedUser);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
-        Optional<UserDTO> userDTO = userService.findById(id);
-        return userDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        Optional<User> user = userService.findById(id);
+        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/email")
-    public ResponseEntity<UserDTO> getUserByEmail(@RequestParam String email) {
-        Optional<UserDTO> userDTO = userService.findByEmail(email);
-        return userDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<UserDetails> getUserByEmail(@RequestParam String email) {
+        UserDetails userDetails = userService.findByEmail(email);
+        if (userDetails != null) {
+            return ResponseEntity.ok(userDetails);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")

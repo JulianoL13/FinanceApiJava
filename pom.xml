@@ -37,6 +37,19 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!-- JWT com Auth0 -->
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>4.4.0</version>
+        </dependency>
+
+        <!-- Spring Security OAuth2 JOSE -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-jose</artifactId>
+        </dependency>
+
         <!-- Databases -->
         <dependency>
             <groupId>com.h2database</groupId>
@@ -68,7 +81,6 @@
             <scope>test</scope>
         </dependency>
 
-
         <!-- DevTools for Development -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -76,7 +88,17 @@
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
+
+        <!-- Servlet API (para evitar problemas de resolução) -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
+
+
 
     <build>
         <plugins>
