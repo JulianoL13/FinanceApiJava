@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class FinanceApiSpringApplicationTests {
+public class FinanceApiSpringApplicationTests {
 
     @Test
-    void contextLoads() {
+    public void contextLoads() {
+        // This test will simply attempt to start the application context.
     }
-
 }
