@@ -55,7 +55,7 @@ Este projeto consiste em uma API RESTful desenvolvida com Spring Boot, projetada
 - **H2**: Banco de dados de desenvolvimento
 - **PostgreSQL**: Banco de dados relacional
 	- 2.3.1 **Diagram Inicial do Banco de Dados**
-	- ![[WhatsApp Image 2024-11-05 at 00.30.41.jpeg]]
+	- ![db schema](https://github.com/JulianoL13/FinanceApiJava/blob/main/docs/WhatsApp%20Image%202024-11-05%20at%2000.30.41.jpeg)
 
 ### 2.4 Ferramentas de Desenvolvimento
 - **Lombok**: Redução de código boilerplate
